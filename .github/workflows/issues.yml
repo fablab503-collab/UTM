@@ -4,6 +4,7 @@ on:
     types: [created]
   issues:
     types: [opened]
+permissions: {}
 jobs:
   cooldown:
     name: Cooldown

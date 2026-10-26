@@ -22,6 +22,9 @@ on:
         required: true
         default: 'false'
 
+permissions:
+  contents: read
+
 env:
   BUILD_XCODE_PATH: ${{ vars.HOST_XCODE_PATH || '/Applications/Xcode.app' }}
   RUNNER_IMAGE: ${{ vars.RUNNER_IMAGE || 'macos-26' }}
@@ -242,6 +245,8 @@ jobs:
     name: Package (iOS)
     runs-on: ${{ fromJSON(needs.configuration.outputs.github-runner) }}
     needs: [configuration, build-utm]
+    permissions:
+      contents: write # upload release assets
     strategy:
       matrix:
         configuration: [
@@ -308,6 +313,8 @@ jobs:
     name: Package (macOS)
     runs-on: ${{ fromJSON(needs.configuration.outputs.github-runner) }}
     needs: [configuration, build-universal]
+    permissions:
+      contents: write # upload release assets
     if: github.event_name == 'release' || github.event.inputs.test_release == 'true'
     steps:
       - name: Checkout
