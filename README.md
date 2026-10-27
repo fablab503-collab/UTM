@@ -1,3 +1,5 @@
+> **About this repository:** this is a copy of [utmapp/UTM](https://github.com/utmapp/UTM) by the UTM authors, licensed under the Apache License 2.0 (see `LICENSE`). Changes made here by D-Creations (Daniel Madac): CI hardening (least-privilege `GITHUB_TOKEN`). All credit for UTM goes to its original authors; please support the original project.
+
 #  UTM
 [![Build](https://github.com/utmapp/UTM/actions/workflows/build.yml/badge.svg?branch=main&event=push)][1]
 [![Mac App Store](https://img.shields.io/badge/Mac_App_Store-UTM-0D96F6?logo=appstore&logoColor=white)](https://apps.apple.com/us/app/utm-virtual-machines/id1538878817)
