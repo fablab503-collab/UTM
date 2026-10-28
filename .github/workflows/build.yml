@@ -22,6 +22,9 @@ on:
         required: true
         default: 'false'
 
+permissions:
+  contents: read
+
 env:
   BUILD_XCODE_PATH: ${{ vars.HOST_XCODE_PATH || '/Applications/Xcode.app' }}
   RUNNER_IMAGE: ${{ vars.RUNNER_IMAGE || 'macos-26' }}
@@ -83,11 +86,11 @@ jobs:
         run: |
           echo "/usr/local/opt/bison/bin:/opt/homebrew/opt/bison/bin" >> $GITHUB_PATH
       - name: Install Requirements
-        if: (steps.cache-sysroot.outputs.cache-matched-key == '' || github.event.inputs.rebuild_sysroot == 'true') && needs.configuration.outputs.runner == env.RUNNER_IMAGE
+        if: (steps.cache-sysroot.outputs.cache-matched-key == '' || github.event.inputs.rebuild_sysroot == 'true') && fromJSON(needs.configuration.outputs.runner) == env.RUNNER_IMAGE
         run: |
           brew uninstall cmake
           brew install bison pkg-config gettext glib-utils libgpg-error nasm make meson cmake
-          brew install llvm spirv-llvm-translator libxcb libxrandr
+          brew install llvm spirv-llvm-translator spirv-tools libxcb libxrandr
           pip3 install --break-system-packages --user six pyparsing pyyaml setuptools distlib mako
           gem install --user-install xcpretty
           rm -f /usr/local/lib/pkgconfig/*.pc
@@ -242,6 +245,8 @@ jobs:
     name: Package (iOS)
     runs-on: ${{ fromJSON(needs.configuration.outputs.github-runner) }}
     needs: [configuration, build-utm]
+    permissions:
+      contents: write # upload release assets
     strategy:
       matrix:
         configuration: [
@@ -308,6 +313,8 @@ jobs:
     name: Package (macOS)
     runs-on: ${{ fromJSON(needs.configuration.outputs.github-runner) }}
     needs: [configuration, build-universal]
+    permissions:
+      contents: write # upload release assets
     if: github.event_name == 'release' || github.event.inputs.test_release == 'true'
     steps:
       - name: Checkout
